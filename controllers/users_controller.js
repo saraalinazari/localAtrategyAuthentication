@@ -4,19 +4,47 @@ exports.index = function(req, res) {
     console.log("inside users controller index");
     // res.render('index');
     res.render('users/login', {
+  
         layout: 'main-login'
       });
   
 };
 exports.loginUser = function(req,res){
     console.log("inside users controller loginUser");
-    console.log(res);
-    console.log(req);
+    //console.log("Res########",res);
+    //console.log("ReqQQQQQQQ",req);
     // passport.authenticate('local', { failureRedirect: '/login' }),
     //     function(req, res) {
-            // res.redirect('/');//}
-            res.redirect('/' + req.user.username);
+          //  res.redirect('/');//}
+            // window.location.href = '../';
+            //res.redirect('/' + req.user.username);
+            // res.render("index");
+           if(req.isAuthenticated){
+            console.log("req.isAuthenticated********",req.isAuthenticated);
+              console.log("req.user********",req.user);
+              console.log('req.cookies : ', req.cookies);
+
+  console.log('req.login', req.login);
+  console.log('req.isAuthenticated : ', req.isAuthenticated);
+  console.log('req.session', req.session);
+  req.session.view = req.user;
+  console.log('req.user : ', req.user);
+           } 
+           else{
+            console.log("req.user");
+           }
+          // res.redirect('/' + user);
+         // res.redirect('/' + req.user.username);
+            //  res.json({user: req.user});
+          res.json("/");
+          // res.render('index', {
+          //   user:req.user
+          // });
+          //  res.redirect('/');
 }
+// passport.authenticate('local', { failureRedirect: '/login' }),
+//     function(req, res) {
+//         res.redirect('/');}
 exports.registerUser = function(req,res){
     console.log("inside users controller registerUser");
     res.render('users/register', {

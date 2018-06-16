@@ -11,7 +11,8 @@ $(document).ready(function() {
       console.log("you got the click");
     });
     // When the form is submitted, we validate there's an email and password entered
-    loginForm.on("submit", function(event) {
+    //$('#loginBtn').on('click',function(event){
+     loginForm.on("submit", function(event) {
       event.preventDefault();
       var userData = {
         username: usernameInput.val().trim(),
