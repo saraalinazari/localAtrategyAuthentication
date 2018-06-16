@@ -36,6 +36,18 @@ var db = require("../models");
     }
   ));
   
+  // var  session= function (req, res) {
+  //     var temp = req.session.passport; // {user: 1}
+  //     req.session.regenerate(function(err){
+  //         //req.session.passport is now undefined
+  //         req.session.passport = temp;
+  //         req.session.save(function(err){
+  //             res.send(200);
+  //         });
+  //     });
+  // }
+    
+  
   // User.findOne({ where: { username: req.body.username } }) // searching a user with the same username and password sended in req.body
   //   .then(function (user) {
   //     if(user && user.validPassword(req.body.password)) {
@@ -53,14 +65,52 @@ var db = require("../models");
   // In order to help keep authentication state across HTTP requests,
   // Sequelize needs to serialize and deserialize the user
   // Just consider this part boilerplate needed to make it all work
-  passport.serializeUser(function(user, cb) {
-    cb(null, user);
+  // passport.serializeUser(function(user, cb) {
+  //   cb(null, user);
+  // });
+  
+  // passport.serializeUser(function(user, cb) {
+  //   cb(null, user);
+  // });
+  
+  function findById(id, done) {
+    db.User.findOne({
+      where: {
+        id: id
+      }
+    }).then(function(dbUser) {
+      // If there's no user with the given username
+      if (!dbUser) {
+        console.log("wrong Username");
+        return done(null, false, {
+          message: "Incorrect username."
+        });
+      }
+      // If there is a user with the given username, but the password the user gives us is incorrect
+      // else  {
+      //   console.log("user found");
+      //   return done(null, false, {
+      //     message: "Incorrect password."
+      //   });
+      // }
+      // If none of the above, return the user
+      return done(null, dbUser);
+    });
+  }
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
   });
   
-  passport.deserializeUser(function(obj, cb) {
-    cb(null, obj);
+  passport.deserializeUser(function(id, done) {
+   findById(id, function(err, user) {
+      done(err, user);
   });
-
+  });
+  // passport.deserializeUser(function(obj, cb) {
+  //   cb(null, obj);
+  // });
+  
+  
 
 //   passport.serializeUser(function(user, done) {
 //     done(null, user.id);
@@ -73,3 +123,4 @@ var db = require("../models");
 //   });
   // Exporting our configured passport
   module.exports = passport;
+
